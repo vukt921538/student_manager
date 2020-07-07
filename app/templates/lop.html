@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Danh sách lớp</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'lop' %}" class="breadcrumb-link">Danh sách lớp</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+            <div class="card">
+                <h4 class="card-header">
+                    <form action="" method="post" novalidate>
+                        {% csrf_token %}
+                        <div style="width: 30%; display: inline-block;">
+                            {{form}}
+                        </div>
+                        <div style="display: inline-block;">
+                            <button type="submit" class="btn btn-secondary" style="padding-top: 8px; padding-bottom: 8px;"><i class="fas fa-filter"></i> Lọc kết quả</button>
+                        </div>
+                    </form>
+                    <hr>
+                    <div class="table-responsive" style="overflow-y: auto; height: 400px;">
+                        <table class="table table-striped table-bordered first" style="text-align: center; font-size: 85%;">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã lớp</th>
+                                    <th>Tên lớp</th>
+                                    <th>Ngành</th>
+                                    <th>Giảng viên</th>
+                                    <th>Thời gian</th>
+                                    <th>Hệ đào tạo</th>
+                                    <th>Loại lớp</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for lop in data %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{lop.ma_lop}}</td>
+                                    <td>{{lop.mon_hoc.tenmon}}</td>
+                                    <td>{{lop.mon_hoc.nganh.tennganh}}</td>
+                                    <td>{{lop.giang_vien.ho_ten}}</td>
+                                    <td>{{lop.thoi_gian_hoc}}</td>
+                                    <td>{{lop.he_dt.key}}</td>
+                                    <td>{{lop.ghi_chu}}</td>
+                                    <td>
+                                        <a href="{% url 'list_student_lop' lop.id %}" class="btn btn-primary">Xem</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </h4>
+            </div>
+            
+        </div>
+{% endblock %}

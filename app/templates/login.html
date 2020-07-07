@@ -1,0 +1,74 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+ 
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link href="{% static 'assets/vendor/fonts/circular-std/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/libs/css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/vendor/fonts/fontawesome/css/fontawesome-all.css' %}">
+	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <style>
+    html,
+    body {
+        height: 100%;
+		font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- login page  -->
+    <!-- ============================================================== -->
+    <div class="splash-container" style="border-radius: 50px;">
+        <div class="card ">
+            <div class="card-header text-center"><img class="logo-img" src="{% static 'utt.png' %}" alt="logo" style="width: 35%;"></a><span class="splash-description">Cổng thông tin đào tạo <br> <p style="font-weight: bold; color: rgb(238, 97, 16);">Đại học Công nghệ Giao thông vận tải</p></span></div>
+            <div class="card-body">
+                {% if error_login %}
+							<div class="alert alert-danger" role="alert">
+								<strong >{{error_login}}</strong>
+							  </div>
+				{% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control form-control-lg" name="username" type="text" placeholder="Username" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control form-control-lg" name="pass" type="password" placeholder="Password">
+                    </div>
+                    <div class="form-group" style="text-align: center;">
+                        <label>
+                            <span>Vui lòng nhập đầy đủ thông tin</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Đăng nhập</button>
+                </form>
+            </div>
+        </div>
+    </div>
+  
+    <!-- ============================================================== -->
+    <!-- end login page  -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    <script src="{% static 'assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+</body>
+ 
+</html>

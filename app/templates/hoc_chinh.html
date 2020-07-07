@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Đăng kí học chính khoá</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'dang_ki_hoc_chinh' %}" class="breadcrumb-link">Đăng kí học chính khoá</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h4 class="card-header">
+                            Mã sinh viên : <b class="text-danger">{{sv.user}}</b> - <b>{{sv.hoten}}</b>
+                            <br>
+                            <hr>
+                            {% if messages %}
+                            {% for message in messages %}
+                              <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                {{ message }}
+                              </div>
+                              {% endfor %}
+                            {% endif %}
+                            <div class="table-responsive" style="font-size: 90%;">
+                            <table class="table table-striped table-bordered first">
+                            <h4 class="text-success" style="text-align: center;">Học phần đã đăng kí thành công</h4>
+                            <small class="text-muted">Note: <i>Các học phần đã hoàn thành có thể ấn Huỷ</i></small>
+                                <thead>
+                                    <tr style="text-align: center;">
+                                        <th>Mã lớp</th>
+                                        <th>Mã môn</th>
+                                        <th>Tên môn</th>
+                                        <th>Số tín chỉ</th>
+                                        <th>Giảng viên</th>
+                                        <th>Thời gian học</th>
+                                        <th>Sĩ số</th>
+                                        <th>TG Đăng kí</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{item.ma_lop}}</td>
+                                        <td>{{item.mon_hoc.ma_mon}}</td>
+                                        <td>{{item.mon_hoc.tenmon}}</td>
+                                        <td>{{item.mon_hoc.tin_chi}}</td>
+                                        <td>{{item.giang_vien.ho_ten}}</td>
+                                        <td>{{item.thoi_gian_hoc}}</td>
+                                        <td>{{item.si_so}}/{{item.si_so_max}}</td>
+                                        <td class="text-danger">{{item.fmt_time}}</td>
+                                        <td>
+                                        {% comment %} SET DISABLE BUTTON  {% endcomment %}
+                                            {% if item.disable_button %}
+                                            <button type="submit" class="btn btn-danger" disabled>Huỷ</button>
+                                            {% else %}
+                                            <a href="{% url 'huy_lop' item.id %}" class="btn btn-danger" onclick="if (confirm('Bạn muốn huỷ lớp này?')){console.log('OK')}else{return false}">Huỷ</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <small class="text-danger"><b>Lưu ý: </b> Quyền được huỷ học phần chỉ được áp dụng khi học phần đó đã được đăng kí thành công trong khoảng thời gian < 1 ngày, sau 1 ngày sẽ không được phép huỷ</small>
+
+                            <br>
+                        </div>
+                        <br>
+                        <hr>
+                                <div class="table-responsive" style="font-size: 95%;">
+                                <table class="table table-striped table-bordered first">
+                                <h4 class="text-danger" style="text-align: center;">Danh sách học phần có thể đăng kí</h4>
+                                    <thead>
+                                        <tr style="text-align: center;">
+                                            <th>Môn học</th>
+                                            <th>Mã môn</th>
+                                            <th>Tín chỉ</th>
+                                            <th>Giảng viên</th>
+                                            <th>Thời gian</th>
+                                            <th>Sĩ sô</th>
+                                            <th>Hạn đăng kí</th>
+                                            <th>Trạng thái</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align: center; font-size: 85%;">
+                                        {% for l in lop %}
+                                        <tr>
+                                            <th>{{l.mon_hoc.tenmon}}</th>
+                                            <th>{{l.mon_hoc.ma_mon}}</th>
+                                            <th>{{l.mon_hoc.tin_chi}}</th>
+                                            <th>{{l.giang_vien.ho_ten}}</th>
+                                            <th>{{l.thoi_gian_hoc}}</th>
+                                            <th>{{l.count}}/{{l.si_so_max}}</th>
+                                            <th>{{l.deadline}}</th>
+                                            {% if l.hidden %}
+                                            <th class="text-danger">Đầy</th>
+
+                                            {% elif l.out_of_date %}
+                                            <th class="text-secondary">Quá hạn đăng kí</th>
+                                            {% else %}
+                                            <th class="text-success">Khả dụng</th>
+                                            {% endif %}
+
+                                            {% if l.hidden %}
+                                            <th>
+                                                <button type="submit" class="btn btn-danger" disabled>Đăng kí</button>
+                                            </th>
+                                            {% elif l.out_of_date %}
+                                            <th>
+                                                <button type="submit" class="btn btn-danger" disabled>Đăng kí</button>
+                                            </th>
+                                            {% else %}
+                                            <th>
+                                                <a href="{% url 'dang_ki_chinh' l.id %}" type="submit" class="btn btn-danger">Đăng kí</a>
+                                            </th>
+                                            {% endif %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </div>
+                                </table>
+                                <br>
+                            </div>
+                        </h4>
+                            <!-- table here -->
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+                <!-- ============================================================== -->
+                <!-- end data table multiselects  -->
+                <!-- ============================================================== -->
+            </div>
+        </div>
+{% endblock %}

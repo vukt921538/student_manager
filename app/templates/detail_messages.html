@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container  dashboard-content">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="page-header">
+                    <div class="page-breadcrumb">
+                        <nav aria-label="breadcrumb">
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h4 class="card-header">
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h1 class="mt-4">{{mess_id.title}}</h1>
+                            <p class="">
+                                Người gửi:
+                                <a href="#"><span class="badge badge-pill badge-primary">{{mess_id.sender}}</span></a>
+                                <br>
+                                <small class="text-muted">Thời gian: {{mess_id.date_time}}</small>
+                            </p>
+                            <a href="{% url 'inbox' %}"><small><i class="angle-left"></i></small></a>
+
+                        </div>
+                    </div>
+                    <div>
+                        <div class="container" style="text-align: left;">
+                            {{mess_id.messages}}
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="{% url 'inbox' %}" class="btn btn-outline-info btn-sm" style="float: left;"><i
+                            class="fas fa-chevron-left"></i> Quay lại</a>
+                    <a href="{% url 'delete_inbox' mess_id.id %}" class="btn btn-outline-danger btn-sm"
+                        style="float: right;"
+                        onclick="if (confirm('Bạn chắc chắn muốn xóa thư này?')){console.log('OK')}else{return false}"><i
+                            class="fas fa-trash"></i> Xoá thư</a>
+                </div>
+            </h4>
+        </div>
+        <!-- ============================================================== -->
+        <!-- end pageheader -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- end data table multiselects  -->
+        <!-- ============================================================== -->
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+<style>
+  h2, h1 {
+    font-family: 'Baloo Bhai', cursive;
+  }
+  p, h5 {
+    font-family: 'Montserrat', sans-serif;
+  }
+</style>
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8" style="padding-top: 25px;">
+        <div class="card mb-4">
+          <div class="card-body">
+            {% if user.is_superuser %}
+            <p style="margin-bottom: 0px;">
+              <div style="display: inline-block;">
+                <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                  <i class="fas fa-plus-circle"></i> Tạo bài viết
+                </a>
+              </div>
+            </p>
+            {% for message in messages %}
+              <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+              </div>
+            {% endfor %}
+            <div class="collapse" id="collapseExample" style="padding-top: 10px;">
+              <div class="card card-body">
+                <h4 style="font-family: 'Baloo Bhai', cursive;">Tạo bài viết</h4>
+                <form action="" method="post">
+                  {% csrf_token %}
+                  {{form.as_p}}
+                  <br>
+                  <button type="submit" class="btn btn-outline-primary" style="float: right;">Đăng bài</button>
+                </form>
+              </div>
+            </div>
+            {% else %}
+            <h3 style="font-family: 'Baloo Bhai', cursive;">Bài viết mới nhất</h3>
+            {% endif %}
+          </div>
+        </div>
+        <!-- Blog Post -->
+        {% if page_obj %}
+        {% for post in page_obj %}
+        <div class="card mb-4">
+          <div class="card-body">
+            <div style="display: inline-block;">
+              <h2 class="card-title"><a href="{% url 'post_detail' post.id %}">{{post.title}} <b>{{post.points}}</b></a></h2>
+            </div>
+            {% if user.is_superuser %}
+            <div style="display: inline-block; float: right;">
+              <a href="{% url 'delete_post' post.id %}" class="text-danger" onclick="if (confirm('Bạn có muốn xóa bài viết này ?')){console.log('OK')}else{return false}"><i class="fas fa-trash-alt"></i> Delete</a>
+            </div>
+            {% endif %}
+            <p class="card-text">{{post.content|truncatechars:200}} <a href="{% url 'post_detail' post.id %}" class="text-info">Read More &rarr;</a></p>
+          </div>
+          <div style="text-align: right;">
+            <div class="card-footer text-muted">
+              <i class="far fa-clock"></i> {{post.date_published|naturaltime}} by
+              <a href="#"><span class="badge badge-primary"><i class="fas fa-user"></i> {{post.author}}</span></a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="card mb-4">
+          <div class="card-body">
+            <i class="fas fa-search"></i> Không tìm thấy kết quả cho "<b>{{value}}</b>"
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Pagination -->
+        <ul class="pagination justify-content-center mb-4">
+          <li class="page-item">
+            {% if page_obj.has_previous %}
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr; Trang trước</a>
+            {% endif %}
+          </li>
+          <li class="page-item">
+            {% if page_obj.has_next %}
+            <a class="page-link" href="?page={{page_obj.next_page_number}}">Trang tiếp theo &rarr;</a>
+            {% endif %}
+          </li>
+        </ul>
+
+        <div class="pagination justify-content-center mb-4">
+          <nav aria-label="...">
+            <ul class="pagination">
+              {% for page in range_page %}
+                {% if page == page_number %}
+                <li class="page-item active"><a class="page-link" href="#">{{page}}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
+                {% endif %}
+              <!-- <li class="page-item active">
+                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+              </li> -->
+              {% endfor %}
+            </ul>
+          </nav>
+        </div>
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+        <!-- Search Widget -->
+        <form action="{% url 'search_post' %}" method="GET">
+        <div class="card my-4">
+          <h5 class="card-header">Tìm kiếm bài viết</h5>
+          <div class="card-body">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for...", name="data">
+              <span class="input-group-btn">
+                <button class="btn btn-secondary" type="submit">Go!</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+        <!-- Side Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Bài viết phổ biến</h5>
+          <div class="card-body">
+            <table class="table table-bordered" style="text-align: center;">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Bài viết</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for post in post_popular %}
+                <tr>
+                  <td>
+                    {{forloop.counter}}
+                  </td>
+                  <td>
+                    <a href="{% url 'post_detail' post.post.id %}">{{post.post}}</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+                </div>
+            </div>
+{% endblock %}

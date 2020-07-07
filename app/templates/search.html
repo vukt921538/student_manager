@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+        <div class="container-fluid  dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="page-header">
+                            <h2 class="pageheader-title"><i class="fas fa-search"></i> Kết quả tìm kiếm cho "{{key}}"</h2>
+                            <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- basic table  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        {% if result_masv %}
+                        <div class="card">
+                            <h4 class="card-header">
+                                <br>
+                                <div>
+                                        <h4><b>Mã sinh viên:</b></h4>
+                                </div>
+                                <hr>
+                                {% for item in result_masv %}
+                                <ul>
+                                    <li><a href="{% url 'detail_student' item.id %}">{{item}}</a></li>
+                                </ul>
+                                {% endfor %}
+                                <br>
+                            </h4>
+                                <!-- table here -->
+                        </div>
+                        {% elif result_hoten %}
+                        <div class="card">
+                                <h4 class="card-header">
+                                    <br>
+                                    <div>
+                                            <h4><b>Họ tên:</b></h4> 
+                                    </div>
+                                    <hr>
+                                    {% for item in result_hoten %}
+                                    <ul>
+                                        <li><a href="{% url 'detail_student' item.id %}">{{item}}</a></li>
+                                    </ul>
+                                    {% endfor %}
+                                    <br>
+                                </h4>
+                                    <!-- table here -->
+                            </div>
+                        {% elif result_lop %}
+                        <div class="card">
+                                <h4 class="card-header">
+                                    <br>
+                                    <div>
+                                            <h4> <b>Lớp:</b> </h4> 
+                                    </div>
+                                    <hr>
+                                    {% for item in result_lop %}
+                                    <ul>
+                                        <li><a href="{% url 'list_student_lop' item.id %}">{{item}}</a></li>
+                                    </ul>
+                                    {% endfor %}
+                                    <br>
+                                </h4>
+                                    <!-- table here -->
+                            </div>
+                        {% else %}
+                        <div class="card">
+                                <h4 class="card-header">
+                                    <br>
+                                    <div>
+                                            <p>Không có kết quả</p>
+                                    </div>
+                                    <hr>
+                                    
+                                    <br>
+                                </h4>
+                                    <!-- table here -->
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end basic table  -->
+                    <!-- ============================================================== -->
+                </div>
+                    <!-- ============================================================== -->
+                    <!-- end data table multiselects  -->
+                    <!-- ============================================================== -->
+                </div>
+            </div>
+{% endblock %}

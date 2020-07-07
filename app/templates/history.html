@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Lịch sử giao dịch</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'history' %}" class="breadcrumb-link">Lịch sử giao dịch</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h4 class="card-header">
+                    <ul>
+                        {% for d in data %}
+                        <li><u class="text-primary">{{d.user}}</u> <br> - <b class="text-danger">{{d.actions}}</b> <b><br> <i>Thời gian: </i> {{d.time}}</b></li>
+                        {% endfor %}
+                    </ul>
+                </h4>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- end data table multiselects  -->
+                <!-- ============================================================== -->
+            </div>
+        </div>
+{% endblock %}

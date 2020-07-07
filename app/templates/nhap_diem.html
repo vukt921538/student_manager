@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+        <div class="container-fluid  dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="page-header">
+                            <h2 class="pageheader-title">Danh sách sinh viên</h2>
+                            <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                            <div class="page-breadcrumb">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                        <li class="breadcrumb-item"><a href="{% url 'mon_hoc' %}" class="breadcrumb-link">Lớp giảng dạy</a></li>
+                                        <li class="breadcrumb-item"><a href="{% url 'mon_hoc' %}" class="breadcrumb-link">Danh sách sinh viên</a></li>
+                                    </ol>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!-- basic table  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                            <h4 class="card-header">
+                                <br>
+                                <div>
+                                        <div style="text-align: left; display: inline-block">
+                                                Lớp : <b>{{lop.ma_lop}}</b> ({{lop.mon_hoc.tenmon}})
+                                                <br>
+                                                Giảng viên: <b>{{lop.giang_vien.ho_ten}}</b>
+                                        </div>
+                                        <div style="text-align: right; display: inline-block; float:right;">
+                                                Ngành: <b>{{lop.mon_hoc.nganh.tennganh}}</b> <br>
+                                                Khoa: <b>{{lop.mon_hoc.nganh.khoa}}</b>
+                                        </div>
+                                </div>
+                                <hr>
+                                {% if messages %}
+                                {% for message in messages %}
+                                  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    {{ message|safe }}
+                                </div>
+                                  {% endfor %}
+                                {% endif %}
+                                <form action="{% url 'insert_data' %}" method="post">
+                                    {% csrf_token %}
+                                <div class="table-responsive">
+                                    <small class="form-text" style="color: red;">Các trường không nhập đầy đủ thông tin sẽ không được cập nhật.</small>
+                                        <table class="table table-striped table-bordered first">
+                                            <thead>
+                                                <tr>
+                                                        <th>STT</th>
+                                                        <th>Mã SV</th>
+                                                        <th>Tên sinh viên</th>
+                                                        <th>Chuyên cần</th>
+                                                        <th>Kiểm tra</th>
+                                                        <th>Cuối kì</th>
+                                                        <th>Tổng kết</th>
+                                                        <th>Điểm chữ</th>
+                                                        <th>Đánh giá</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    {% for sv in diem_tp %}
+                                                    <tr style="font-size: 80%;">
+                                                        <td>{{forloop.counter}}</td>
+                                                        <td>{{sv.user}}</td>
+                                                        <td>{{sv.hoten}}</td>
+                                                        <td><input type="number" min="0" max="10" step="0.1" value="{{sv.item.diem_chuyen_can}}" name="diem_cc_{{sv.id}}" class="form-control" autocomplete="off"></td>
+                                                        <td><input type="number" min="0" max="10" step="0.1" value="{{sv.item.diem_kiem_tra}}" name="diem_kt_{{sv.id}}" class="form-control"></td>
+                                                        <td><input type="number" min="0" max="10" step="0.1" value="{{sv.item.diem_cuoi_ki}}" name="diem_ck_{{sv.id}}" class="form-control"></td>
+                                                        <td>{{sv.diem.tong_ket}}</td>
+                                                        <td>{{sv.diem.diem_chu}}</td>
+                                                        <td>
+                                                            {% if sv.diem.danh_gia == 'DAT' %}
+                                                            <p style="color: green; text-align: center;">{{sv.diem.danh_gia}}</p>
+                                                            {% elif sv.diem.danh_gia == 'HOCLAI' %}
+                                                            <p style="color: red; text-align: center;">{{sv.diem.danh_gia}}</p>
+
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                        </table>
+                                </div>
+                                <br>
+                                <div style="text-align: right; display: inline-block; float: right;">
+                                        <button type="submit" class="btn btn-success">Nhập điểm</button>
+                                        <a href="{% url 'export_csv' %}" class="btn btn-danger" role="button">Xuất phiếu điểm</a>
+
+                                </div>
+                                </form>
+                                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModalCenter">Nhập từ file excel</button>
+
+
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <form action="{% url 'nhap_diem_excel' %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLongTitle">Nhập điểm từ file</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body" style="text-align: center;">
+                                            <input type="file" name="ex_file" id="" class="form-control">
+                                          
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </form>
+                                  </div>
+                            </h4>
+                                <!-- table here -->
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!-- end basic table  -->
+                    <!-- ============================================================== -->
+                </div>
+                    <!-- ============================================================== -->
+                    <!-- end data table multiselects  -->
+                    <!-- ============================================================== -->
+                </div>
+            </div>
+{% endblock %}

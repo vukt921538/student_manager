@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Thêm dữ liệu</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'add_menu' %}" class="breadcrumb-link">Thêm mới dữ liệu</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header"><i class="fas fa-user-plus"></i><b> Thêm mới sinh viên</b></h5>
+                        <div class="card-body">
+                            <p>Thêm từng sinh viên vào một lớp hoặc nhập danh sách nhiểu sinh viên nhanh từ file Excel.</p>
+                            <a href="{% url 'create_student' %}" class="btn btn-secondary">Thêm sinh viên</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header"><i class="fas fa-align-justify"></i><b> Tạo lớp</b></h5>
+                        <div class="card-body">
+                            <p>Tạo lớp cho sinh viên đăng kí học</p>
+                            <a href="{% url 'create_lop' %}" class="btn btn-secondary">Tạo lớp</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header"><i class="fas fa-address-card"></i><b> Thêm giảng viên</b></h5>
+                        <div class="card-body">
+                            <p>Thêm giảng viên và phân quyền giảng viên.</p>
+                            <a href="{% url 'create_teacher' %}" class="btn btn-secondary">Thêm mới giảng viên</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header"><i class="fas fa-align-justify"></i><b> Thêm ngành</b></h5>
+                        <div class="card-body">
+                            <p>Bổ sung ngành đào tạo của trường</p>
+                            <a href="{% url 'create_student' %}" class="btn btn-secondary">Thêm ngành</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header"><i class="fas fa-plus"></i><b> Thêm khoa</b></h5>
+                        <div class="card-body">
+                            <p>Bổ sung thêm các khoa.</p>
+                            <a href="{% url 'create_student' %}" class="btn btn-secondary">Thêm khoa</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header"><i class="fas fa-plus"></i><b> Thêm môn học</b></h5>
+                        <div class="card-body">
+                            <p>Bổ sung môn học cho các ngành đào tạo</p>
+                            <a href="{% url 'create_student' %}" class="btn btn-secondary">Thêm môn học</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h5 class="card-header"><i class="fas fa-plus"></i><b> Thêm niên khóa</b></h5>
+                        <div class="card-body">
+                            <p>Bổ sung niên khóa mới.</p>
+                            <a href="{% url 'create_student' %}" class="btn btn-secondary">Thêm niên khóa</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+                <!-- ============================================================== -->
+                <!-- end data table multiselects  -->
+                <!-- ============================================================== -->
+            </div>
+            
+        </div>
+{% endblock %}

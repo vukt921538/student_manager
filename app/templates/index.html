@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_staff %}
+
+<div class="dashboard-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <!-- ============================================================== -->
+            <!-- pageheader  -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Thông tin giảng viên </h2>
+                        <p class="pageheader-text">Nulla euismod urna eros, sit amet scelerisque torton lectus vel mauris facilisis faucibus at enim quis massa lobortis rutrum.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Thông tin giảng viên</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="font-family: 'Roboto', sans-serif;">
+                <div class="row my-2">
+                    <div class="col-lg-8 order-lg-2">
+                        {% if messages %}
+                        {% for message in messages %}
+                          <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                          </div>
+                        {% endfor %}
+                        {% endif %}
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">Thông tin giảng viên</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" data-target="#edit" data-toggle="tab" class="nav-link">Chỉnh sửa thông tin</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content py-4">
+                            <div class="tab-pane active" id="profile">
+                                <h2><b>{{user_login.ho_ten}}</b></h2>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h4>Email:
+                                            {% if user_login.email %}
+                                            <b> {{user_login.email}}</b>
+                                            {% else %}
+                                            <h4>
+                                                <b>Chưa cập nhật</b>
+                                            </h4>
+                                            {% endif %}
+                                        </h4>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                            <hr>
+                                        <h5><span class="fa fa-clock-o ion-clock float-right"></span><b>Thông tin cá nhân:</b></h5>
+                                        <table class="table table-sm table-hover table-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <strong>Địa chỉ : </strong>
+                                                        {% if user_login.address %}
+                                                        {{user_login.address}}
+                                                        {% else %}
+                                                        <p>Chưa cập nhật</p>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>Ngày sinh : </strong>
+                                                        {% if user_login.ngaysinh %}
+                                                        {{user_login.ngaysinh}}
+                                                        {% else %}
+                                                        <p>Chưa cập nhật</p>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!--/row-->
+                            </div>
+                            <div class="tab-pane" id="edit">
+                                <form action="{% url 'edit_profile' %}" method="POST" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Họ tên</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="text" value="{{user_login.ho_ten}}" name="fullname">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Ngày sinh</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="date" value="{{user_login.ngaysinh}}" name="ngaysinh">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Email</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="email" value="{{user_login.email}}" name="email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Địa chỉ </label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="text" value="{{user_login.address|default:''}}" name="address">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label"></label>
+                                        <div class="col-lg-9" style="text-align: right;">
+                                            <input type="submit" class="btn btn-primary" value="Lưu thay đổi">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 order-lg-1 text-center">
+                        <img src="/avata/{{request.user}}.png" onerror="this.src='avata/default.svg';" alt="Missing Image" class="mx-auto img-fluid img-circle d-block" alt="" width="50%">
+                        <label class="custom-file">
+                                {% csrf_token %}
+                                <!-- <input type="file" name="my-avata"> -->
+                                <br>
+                                <button type="submit" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModalCenter">Thay đổi avata</button>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader  -->
+            <!-- ============================================================== -->
+            <!-- MODAL AVATAR  -->
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Thay đổi ảnh đại diện</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{% url 'upload_avata' %}" method="post" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="customFile" name="avata">
+                                    <label class="custom-file-label" for="customFile">Chọn file</label>
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- footer -->
+    <!-- ============================================================== -->
+
+</div>
+<!-- ============================================================== -->
+<!-- end wrapper  -->
+<!-- ============================================================== -->
+</div>
+{% else %}
+<div class="dashboard-wrapper">
+    <div class="dashboard-ecommerce">
+        <div class="container-fluid dashboard-content ">
+            <!-- ============================================================== -->
+            <!-- pageheader  -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Thông tin sinh viên </h2>
+                        <p class="pageheader-text">Nulla euismod urna eros, sit amet scelerisque torton lectus vel mauris facilisis faucibus at enim quis massa lobortis rutrum.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Thông tin sinh viên</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="font-family: 'Roboto', sans-serif;">
+                <div class="row my-2">
+                    <div class="col-lg-8 order-lg-2">
+                        {% if messages %}
+                        {% for message in messages %}
+                          <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                            {{ message }}
+                          </div>
+                        {% endfor %}
+                        {% endif %}
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">Thông tin sinh viên</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="" data-target="#edit" data-toggle="tab" class="nav-link">Chỉnh sửa thông tin</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content py-4">
+                            <div class="tab-pane active" id="profile">
+                                <h2><b>{{user_login.hoten}}</b></h2>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>Chuyên ngành: </h6>
+                                        {% if user_login.nganh.tennganh %}
+                                        <h4>
+                                            <b>{{user_login.nganh.tennganh}}</b>
+                                        </h4>
+                                        {% else %}
+                                        <h4>
+                                            <b>Chưa cập nhật</b>
+                                        </h4>
+                                        {% endif %}
+
+                                        <h6>Hệ đào tạo: </h6>
+                                        {% if user_login.hedt %}
+                                        <h4>
+                                            <b>{{user_login.hedt}}</b>
+                                        </h4>
+                                        {% else %}
+                                        <h4>
+                                            <b>Chưa cập nhật</b>
+                                        </h4>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                            <h6>Giới tính: <b>{{user_login.gender}}</b></h6>
+                                        <h4>Khoá:
+                                            {% if user_login.nien_khoa.ten_nienkhoa %}
+                                            <b> {{user_login.nien_khoa.ten_nienkhoa}}</b>
+                                            {% else %}
+                                            <h4>
+                                                <b>Chưa cập nhật</b>
+                                            </h4>
+                                            {% endif %}
+                                        </h4>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                            <hr>
+                                        <h5><span class="fa fa-clock-o ion-clock float-right"></span><b>Thông tin cá nhân:</b></h5>
+                                        <table class="table table-sm table-hover table-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <strong>Địa chỉ: </strong>
+                                                        {% if user_login.address %}
+                                                        {{user_login.address}}
+                                                        {% else %}
+                                                        <p>Chưa cập nhật</p>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong>Ngày sinh: </strong>
+                                                        {% if user_login.address %}
+                                                        {{user_login.ngaysinh}}
+                                                        {% else %}
+                                                        <p>Chưa cập nhật</p>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!--/row-->
+                            </div>
+                            <div class="tab-pane" id="messages">
+                                <div class="alert alert-info alert-dismissable">
+                                    <a class="panel-close close" data-dismiss="alert">×</a> This is an <strong>.alert</strong>. Use this to show important messages to the user.
+                                </div>
+                                <table class="table table-hover table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                               <span class="float-right font-weight-bold">3 hrs ago</span> Here is your a link to the latest summary report from the..
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               <span class="float-right font-weight-bold">Yesterday</span> There has been a request on your account since that was..
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               <span class="float-right font-weight-bold">9/10</span> Porttitor vitae ultrices quis, dapibus id dolor. Morbi venenatis lacinia rhoncus.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               <span class="float-right font-weight-bold">9/4</span> Vestibulum tincidunt ullamcorper eros eget luctus.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                               <span class="float-right font-weight-bold">9/4</span> Maxamillion ais the fix for tibulum tincidunt ullamcorper eros.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane" id="edit">
+                                <form action="{% url 'edit_profile' %}" method="POST" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Họ tên</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="text" value="{{user_login.hoten}}" name="fullname">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Ngày sinh</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="date" value="{{user_login.ngaysinh}}" name="ngaysinh">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Email</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="email" value="{{user_login.email}}" name="email">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Địa chỉ</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="text" value="{{user_login.address|default:''}}" name="address">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label">Giới tính</label>
+                                        <div class="col-lg-9">
+                                                <select class="form-control" name="gender">
+                                                        <option>Nam</option>
+                                                        <option>Nữ</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label form-control-label"></label>
+                                        <div class="col-lg-9" style="text-align: right;">
+                                            <input type="submit" class="btn btn-primary" value="Lưu thay đổi">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 order-lg-1 text-center">
+                        <img src="avata/{{request.user}}.png" onerror="if (this.src != '/avata/default.svg') this.src = '/avata/default.svg';" class="mx-auto img-fluid img-circle d-block" alt="avatar" width="50%">
+                        <label class="custom-file">
+                                {% csrf_token %}
+                                <!-- <input type="file" name="my-avata"> -->
+                                <br>
+                                <button type="submit" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModalCenter">Thay đổi avata</button>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader  -->
+            <!-- ============================================================== -->
+            <!-- MODAL AVATAR  -->
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Thay đổi ảnh đại diện</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{% url 'upload_avata' %}" method="post" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="customFile" name="avata">
+                                    <label class="custom-file-label" for="customFile">Chọn file</label>
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- footer -->
+    <!-- ============================================================== -->
+
+</div>
+<!-- ============================================================== -->
+<!-- end wrapper  -->
+<!-- ============================================================== -->
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block notifi %}
+{% if not user.is_staff %}
+<div style="position: fixed;
+                        bottom: 0;
+                        right: 0;
+                        width: 200px;
+                        ">
+    <div class="shadow p-3 mb-2 bg-white rounded">
+        <div style="text-align: center;">
+            <a href="{% url 'inbox' %}">
+                <i class="fas fa-envelope" style="font-size: x-large; color: brown;"></i>{% if is_new_message %}<span class="indicator"></span>{% endif %}
+                <p>Hộp thư đến</p>
+                {% if is_new_message %}
+                ({{count_new_messages}} tin nhắn mới )
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Danh sách sinh viên</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'list_student' %}" class="breadcrumb-link">Danh sách sinh viên</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h4 class="card-header">
+                            <br>
+                            <hr>
+                            {% if messages %}
+                            {% for message in messages %}
+                              <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                {{ message }}
+                              </div>
+                              {% endfor %}
+                            {% endif %}
+                            <div class="table-responsive" style="font-size: 90%; text-align: center; position: relative;
+                            height: 600px;
+                            overflow: auto;
+                            display: block;">
+                                <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                    <th>STT</th>
+                                                    <th>Mã SV</th>
+                                                    <th>Tên sinh viên</th>
+                                                    <th>Ngày sinh</th>
+                                                    <th>Giới tính</th>
+                                                    <th>Khóa</th>
+                                                    <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                {% for sv in data %}
+                                                <tr>
+                                                    <th>{{forloop.counter}}</th>
+                                                    <th>{{sv.user.username}}</th>
+                                                    <th>{{sv.hoten}}</th>
+                                                    <th>{{sv.ngaysinh}}</th>
+                                                    <th>{{sv.gender}}</th>
+                                                    <th>{{sv.nien_khoa.ten_nienkhoa}}</th>
+                                                    <th>
+                                                        <a href="{% url 'detail_student' sv.id %}" type="button" class="btn btn-info"><i class="fas fa-info-circle"></i> Thông tin</a>
+                                                        <a href="{% url 'delete_user' sv.id %}" role="button" class="btn btn-danger" onclick="if (confirm('Bạn có muốn xóa sinh viên này khỏi lớp?')){console.log('OK')}else{return false}"><i class="fas fa-user-times"></i> Xóa</a>
+                                                    </th>
+                                                </tr>
+                                                
+                                                {% endfor %}
+                                        </tbody>
+                                    </table>
+                            </div>
+                            <br>
+                        </h4>
+                            <!-- table here -->
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+                <!-- ============================================================== -->
+                <!-- end data table multiselects  -->
+                <!-- ============================================================== -->
+            </div>
+        </div>
+{% endblock %}

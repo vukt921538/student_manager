@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+<style>
+  h2, h1 {
+    font-family: 'Baloo Bhai', cursive;
+  }
+</style>
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+
+        <!-- Title -->
+        <div class="card my-4">
+          <h2 class="card-header">{{post.title}}</h2>
+          <div class="card-body">
+            <p><b>Đăng bởi</b>: <span class="badge badge-pill badge-primary">{{post.author}}</span>
+              <br>
+            <b>Ngày đăng</b>: {{post.date_published}}
+            </p>
+            <hr>
+            <p>{{post.content|linebreaks}}</p>
+          </div>
+        </div>
+
+        <!-- Comments Form -->
+        <div class="card my-4">
+          <h5 class="card-header">Để lại bình luận:</h5>
+          <div class="card-body">
+            <form method="POST" action="">
+              {% csrf_token %}
+              {{comment_form.as_p}}
+              <button type="submit" class="btn btn-primary">Bình luận <i class="far fa-comment-dots"></i></button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Single Comment -->
+        <div class="card my-4">
+          <div class="card-header">
+            <h4 style="font-family: 'Baloo Bhai', cursive;">Bình luận</h4>
+            <hr>
+            {% if not comments %}
+              Chưa có bình luận
+            {% else %}
+            {% for comment in comments %}
+            <div style="text-align: right;">
+              <small><i class="far fa-clock"></i> {{comment.date_comment|naturaltime}}</small>
+            </div>
+              <div class="media mb-4" style="margin-top: -20px;">
+                <img class="d-flex mr-3 rounded-circle" width="10%" src="/avata/default.svg" alt="">
+                <div>
+
+                  <div class="media-body">
+                      <div>
+                        <h5 class="mt-0"><span class="badge badge-secondary"><i class="far fa-user"></i></i> {{comment.user}}</span></h5>
+                      </div>
+
+                    <p>{{comment.comment_box}}</p>
+                  </div>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <a href="" class="text-primary" data-toggle="modal" data-target="#exampleModalCenter_{{comment.id}}"><i class="fas fa-reply"></i> Trả lời</a>
+              </div>
+              <hr style="margin-left: 50px;">
+              {% for c in comment.reply %}
+              <div style="text-align: right;">
+                <small><i class="far fa-clock"></i> {{c.date_comment|naturaltime}}</small>
+              </div>
+              <div class="media mb-4" style="margin-left: 50px; margin-top: -20px;">
+                <img class="d-flex mr-3 rounded-circle" width="10%" src="/avata/default.svg" alt="">
+                <div>
+                  <div class="media-body">
+                      <div>
+                        <h5 class="mt-0"><span class="badge badge-secondary"><i class="far fa-user"></i></i> {{c.user}}</span></h5>
+                      </div>
+                    <p>{{c.comment}}</p>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            <!-- {% for c in comment.reply %}
+              REP: {{c.comment}}
+            {% endfor %} -->
+            <!-- <button class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter_{{comment.id}}">
+              Reply
+            </button> -->
+            <form action="{% url 'reply_comment' comment.id %}" method="post">
+              {% csrf_token %}
+            <div class="modal fade" id="exampleModalCenter_{{comment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">"{{comment.comment_box}}"</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <textarea name="comment" id="" cols="30" class="form-control" placeholder="Trả lời bình luận"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Trả lờI</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+            <hr>
+            {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Comment with nested comments -->
+
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+
+        <!-- Search Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Bài viết này hữu ích?</h5>
+          <div class="card-body">
+            <div class="row" style="text-align: center;">
+                <div class="col">
+                  <form action="{% url 'like_post' post.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger" style="padding-right: 16px; padding-left: 16px;" {% if hidden_like %} disabled {% endif %}><i class="far fa-thumbs-up"></i> Like <span class="badge badge-danger">{{like_count}}</span></button>
+                    {% if hidden %}
+                    <br>
+                    <p class="text-danger">Đã thích</p>
+                    {% endif %}
+                  </form>
+                </div>
+                <div class="col">
+                  <form action="{% url 'dislike_post' post.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-dark" style="padding-right: 8px; padding-left: 8px;" {% if hidden_dislike %} disabled {% endif %}><i class="far fa-thumbs-down"></i> Dislike <span class="badge badge-dark">{{dislike_count}}</span></button>
+                  </form>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side Widget -->
+        <div class="card my-4">
+          <h5 class="card-header">Bài viết phổ biến</h5>
+          <div class="card-body">
+            <table class="table table-bordered" style="text-align: center;">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Bài viết</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for post in post_popular %}
+                <tr>
+                  <td>
+                    {{forloop.counter}}
+                  </td>
+                  <td>
+                    <a href="{% url 'post_detail' post.post.id %}">{{post.post}}</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                </div>
+            </div>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Quản lý học phí</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'hoc_phi' %}" class="breadcrumb-link">Quản lý học phí</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        
+                        <h4 class="card-header">
+                            
+                            <form action="" method="POST" style="padding-top: 8px;">
+                                {% csrf_token %}
+                                <div style="width: 40%; display: inline-block;">
+                                    <input value="{{request.session.get_msv|default:''}}" type="text" class="form-control" name="masv" placeholder="Nhập mã sinh viên ...">
+                                </div>
+                                <div style="display: inline-block;">
+                                    <button type="submit" class="btn btn-outline-primary" style="padding-top: 6px; padding-bottom: 6px;">Tìm kiếm</button>
+                                </div>
+                                <div style="float: right;">
+                                    <a href="{% url 'history' %}" class="btn btn-primary">Lịch sử giao dịch</a>
+                                </div>
+                                <div>
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div style="padding-top: 20px;">
+                                        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                      {% endfor %}
+                                    {% endif %}
+                                    
+                                </div>
+                            </form>
+                            {% if found %}
+                            <div style="padding-bottom: 20px; padding-top: 20px;">
+                                <b>Họ tên: </b> <span class="badge badge-success">{{sv.hoten}}</span> <br>
+                                <b>Mã sinh viên:</b> <span class="badge badge-primary">{{sv.user}}</span> <br>
+                            </div>
+                            <form action="{% url 'dong_hoc_phi' %}" method="POST">
+                                {% csrf_token %}
+                                <div style="width: 40%; display: inline-block;">
+                                    {{form}}
+                                </div>
+                                <div style="display: inline-block;">
+                                    <button type="submit" class="btn btn-secondary" style="padding-top: 6px; padding-bottom: 6px;">Xác nhận</button>
+                                </div>
+                            </form>
+                            <div style="text-align: center; padding-top: 20px;">
+                                <h3 class="text-primary"><b>Số tiền cần đóng: </b><b class="text-danger">{{result}} VND</b></h3>
+                            </div>
+                            <div class="row">
+                                    <!-- ============================================================== -->
+                                    <!-- basic table  -->
+                                    <!-- ============================================================== -->
+                                    
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        <div class="card">
+                                            <h5 class="card-header"><b class="text-success"> Học phí đã đóng: </b> <b class="text-danger">{{r}} VND</b></h5>
+                                            <div class="card-body">
+                                                <div class="table-responsive" style="overflow-y: auto; height: 300px;">
+                                                    <table class="table table-striped table-bordered first" style="text-align: center; font-size: 80%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>Số tiền</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for hocphi in da_dong %}
+                                                            <tr>
+                                                                <td>HK {{hocphi.hoc_ki}}_Đợt {{forloop.counter}}</td>
+                                                                <td class="text-danger"><b>{{hocphi.so_tien}} VND</b></td>
+                                                                <td>
+                                                                    <a href="{% url 'delete_gd' hocphi.id %}" class="badge badge-danger"><i class="far fa-times-circle"></i> Huỷ</a>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                    
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        <div class="card">
+                                            <h5 class="card-header"><b class="text-danger"> Còn phải đóng :</b></h5>
+                                            <div class="card-body">
+                                                <div class="table-responsive" style="overflow-y: auto; height: 300px;">
+                                                    <table class="table table-striped table-bordered first" style="text-align: center; font-size: 80%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Học kì</th>
+                                                                <th>Số tiền</th>
+                                                                <th>Số dư</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for hocphi in data %}
+                                                            <tr>
+                                                                <td>HK_{{hocphi.hoc_ki}}</td>
+                                                                <td class="text-danger"><b>{{hocphi.so_tien_con_no}} VND</b></td>
+                                                                <td class="text-success">{{hocphi.so_du}} VND {{st}}</td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- ============================================================== -->
+                                    <!-- end basic table  -->
+                                    <!-- ============================================================== -->
+                                </div>
+                            {% endif %}
+                            
+
+                        </h4>
+                            <!-- table here -->
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+                <!-- ============================================================== -->
+                <!-- end data table multiselects  -->
+                <!-- ============================================================== -->
+            </div>
+        </div>
+{% endblock %}

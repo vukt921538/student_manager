@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Thêm mới sinh viên</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'create_student' %}" class="breadcrumb-link">Thêm mới sinh viên</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h4 class="card-header">
+                            <br>
+                            <div>
+                                    <h3>Thông tin sinh viên</h3>
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                      <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        {{ message }}
+                                      </div>
+                                      {% endfor %}
+                                    {% endif %}
+                            </div>
+                            <hr>
+                            <div>
+                                    <form action="" method="post" novalidate>
+                                            {% csrf_token %}
+                                            {{form.as_p}}
+                                            <div style=" display: inline-block; padding-top: 10px;">
+                                                    <button type="submit" class="btn btn-outline-primary">Xác nhận</button>
+                                            </div>
+                                        </form>
+                            </div>
+                            <br>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Nhập file Excel</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <form action="{% url 'import_csv' %}" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                        <div class="modal-body">
+                                            Khóa: 
+                                            {{form.nien_khoa}}
+                                            Hệ đào tạo: 
+                                            {{form.hedt}}
+                                            Ngành: 
+                                            {{form.nganh}}
+                                            <br>
+                                            Chọn tệp excel: 
+                                            <input type="file" name="file_excel" id="" class="form-control">
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>
+                            <!-- <form action="{% url 'import_csv' %}" method="post">
+                                    <div style="display: inline-block; float: left;">
+                                            <button type="submit" class="btn btn-success">Nhập từ file CSV</button>
+                                    </div>
+                            </form> -->
+                        </h4>
+                            <!-- table here -->
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+                <!-- ============================================================== -->
+                <!-- end data table multiselects  -->
+                <!-- ============================================================== -->
+            </div>
+        </div>
+{% endblock %}

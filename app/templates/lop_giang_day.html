@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="container-fluid  dashboard-content">
+            <!-- ============================================================== -->
+            <!-- pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="page-header">
+                        <h2 class="pageheader-title">Danh sách lớp</h2>
+                        <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
+                        <div class="page-breadcrumb">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{% url 'index' %}" class="breadcrumb-link">Trang chủ</a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'lop_giang_day' %}" class="breadcrumb-link">Danh sách lớp</a></li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- end pageheader -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <!-- ============================================================== -->
+                <!-- basic table  -->
+                <!-- ============================================================== -->
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="card">
+                        <h4 class="card-header"><b>Danh sách các lớp đang giảng dạy:</b>
+                            <br>
+                            <hr>
+                            <div class="table-responsive" style="font-size: 80%;">
+                                    <table class="table table-striped table-bordered first">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Mã môn học</th>
+                                                <th>Tên môn học</th>
+                                                <th>Số tín chỉ</th>
+                                                <th>Mã lớp</th>
+                                                <th>Sĩ số</th>
+                                                <th>Thời gian học</th>
+                                                <th>Thao tác</th>
+                                                <th>Ghi chú</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                {% for item in ds_lop %}
+                                                <tr>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{item.mon_hoc.ma_mon}}</td>
+                                                    <td>{{item.mon_hoc.tenmon}}</td>
+                                                    <td>{{item.mon_hoc.tin_chi}}</td>
+                                                    <td>{{item.ma_lop}}</td>
+                                                    <td>{{item.count}}</td>
+                                                    <td>{{item.thoi_gian_hoc}}</td>
+                                                    <td><a href="{% url 'nhap_diem' item.id %}" role="button" class="btn btn-info" style="padding-top: 0px; padding-bottom: 0px;"> Xem chi tiết </a></td>
+                                                    <td>{{item.ghi_chu}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                    </table>
+                            </div>
+                        </h4>
+                        
+                            <!-- table here -->
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end basic table  -->
+                <!-- ============================================================== -->
+            </div>
+                <!-- ============================================================== -->
+                <!-- end data table multiselects  -->
+                <!-- ============================================================== -->
+            </div>
+        </div>
+{% endblock %}
