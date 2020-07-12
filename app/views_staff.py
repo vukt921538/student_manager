@@ -1,8 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login as auth_login
+from django.shortcuts import render, redirect
 from .forms import *
-import random
-from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.http import HttpResponse
 from openpyxl import Workbook
@@ -67,8 +64,13 @@ def nhap_diem(request, id):
         except:
             sv.diem = ''
     new_session = request.session.get('select', None)
+    print(ds_sv)
     for sv in ds_sv:
-        sv.item = Diem.objects.get(sinh_vien=sv, mon_hoc=lop.mon_hoc)
+        try:
+            sv.item = Diem.objects.get(sinh_vien=sv, mon_hoc=lop.mon_hoc)
+            print(sv)
+        except:
+            pass
     context = {
         'lop': lop,
         'diem_tp': ds_sv

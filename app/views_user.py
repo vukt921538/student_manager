@@ -1,11 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from .forms import *
-import random
-from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
-from django.http import HttpResponse
-from openpyxl import Workbook
 from datetime import datetime, timedelta
 
 
@@ -71,7 +67,7 @@ def bang_diem(request):
             monhoc.diem.item_3 = item.diem_cuoi_ki
             try:
                 temp = monhoc.diem.item_1 * 0.1 + \
-                    monhoc.diem.item_2 * 0.2 + monhoc.diem.item_3 * 0.7
+                       monhoc.diem.item_2 * 0.2 + monhoc.diem.item_3 * 0.7
                 monhoc.diem.tong_ket = round(temp, 2)
 
                 if monhoc.diem.tong_ket < 4.0 or monhoc.diem.item_1 <= 2:
@@ -103,13 +99,13 @@ def bang_diem(request):
     u = 0
     v = 0
     tong_tc_chua_dat = []  # của tất cả học kì nên phải để ngoauf for
+    tong_diem = []
+    tong_tin = []
     for i in hocki_all:
         i.ss = 6
         i.tong = 0
         i.tin_chi = 0
         i.diem = Diem.objects.filter(mon_hoc__hocki=i, sinh_vien=s)
-        diem_toan_khoa = []  # có thể để ngoài for vì đây là tổng tất cả các kì
-        tc_toan_khoa = []  # tương tự trên
         tc_chua_dat = []
         i.ttc = 0
         for d in i.diem:
@@ -139,28 +135,23 @@ def bang_diem(request):
                 elif d.tong_ket < 4:
                     d.tong_ket = 0
                 i.tong += d.tong_ket
+                print("TONG: ", i.tong)
                 i.tin_chi += d.mon_hoc.tin_chi
-                i.diem.tin = round(i.tong/i.tin_chi, 2)
-                diem_toan_khoa.append(i.diem.tin)
-                tc_toan_khoa.append(i.tin_chi)
+                print("TIN_CHI: ", i.tin_chi)
+                i.diem.tin = round(i.tong / i.tin_chi, 2)
+                tong_diem.append(i.tong)
+                tong_tin.append(i.tin_chi)
                 if d.tong_ket == 0:
                     tc_chua_dat.append(d.mon_hoc.tin_chi)
             except:
                 pass
-
         i.tc_false = sum(tc_chua_dat)
         tong_tc_chua_dat.append(i.tc_false)
-
-        try:
-            # Lấy phần tử cuối cùng của mảng là kết quả
-            j = diem_toan_khoa[-1]
-            m = tc_toan_khoa[-1]
-            u += j
-            v += m
-        except:
-            pass
     result_tc_chua_dat = sum(tong_tc_chua_dat)
-
+    print(tong_diem)
+    tin_chi_sum_all = sum(tong_tin)
+    diem_he_4 = round(sum(tong_diem) / sum(tong_tin), 2)
+    print(diem_he_4)
     form = SelectHocKy()
     if request.method == 'POST':
         form = SelectHocKy(request.POST)
@@ -176,7 +167,7 @@ def bang_diem(request):
                 monhoc.diem.item_3 = item.diem_cuoi_ki
                 try:
                     temp = monhoc.diem.item_1 * 0.1 + \
-                        monhoc.diem.item_2 * 0.2 + monhoc.diem.item_3 * 0.7
+                           monhoc.diem.item_2 * 0.2 + monhoc.diem.item_3 * 0.7
                     monhoc.diem.tong_ket = round(temp, 2)
 
                     if monhoc.diem.tong_ket < 4.0 or monhoc.diem.item_1 <= 2:
@@ -206,14 +197,14 @@ def bang_diem(request):
     context = {
         'data': data,
         'hocki_all': hocki_all,
-        'total': u,
         'tin_chi_all': v,
         'form': form,
+        'tong_tin': tin_chi_sum_all,
         'tong_tc_chua_dat': result_tc_chua_dat,
-        'sv': s
+        'sv': s,
+        'diem_he_4': diem_he_4
     }
     sc = Diem.objects.filter(sinh_vien=s)
-    print('SC: ', sc)
     return render(request, 'bang_diem.html', context)
 
 
@@ -221,6 +212,7 @@ def dang_ki_hoc(request):
     user = User.objects.get(username=request.user)
     sv = SinhVien.objects.get(user=user)
     l = Lop.objects.all()
+
     # Lọc ra những lớp phải học lại thì đăng kí
     ds_lop_hoc_lai = []
     lop_hoc_lai = Lop.objects.filter(ghi_chu='HOCLAI')
@@ -242,38 +234,39 @@ def dang_ki_hoc(request):
                     pass
     for i in ds_lop_hoc_lai:
         i.count = SinhVien.objects.filter(lop=i).count()
-        print('ID: ', i)
 
     # Đăng kí lớp
     ds_moi = sv.lop.filter(ghi_chu='HOCLAI')
-    if(len(ds_moi) != 0):
-        out_of_date = False
-        now = datetime.now()
-        for item in ds_moi:
-            print("DS: ", item.deadline)
-            if now >= item.deadline:
-                item.out_of_date = True
-            item.disable_button = False
-            don_gia = item.mon_hoc.tin_chi * 300000
-            item.count_sv = SinhVien.objects.filter(lop=item).count()
-            item.temp = DangKiHocThanhCong.objects.get(lop__id=item.id)
-            print('==>TIME: ', item.temp.time)
-            time_data = item.temp.time
-            item.s = time_data.strftime('%m/%d/%Y %H:%M:%S')
-            durations = timedelta(days=1)
-            end_time = time_data + durations
-            print('LAST: ', time_data + durations)
-            if now >= end_time:
-                print('HIEN_TAI: ', datetime.now())
-                item.disable_button = True
+    now = datetime.now()
+    for item in ds_moi:
+        if now >= item.deadline:
+            item.out_of_date = True
+        item.disable_button = False
+        don_gia = item.mon_hoc.tin_chi * 300000
+        item.count_sv = SinhVien.objects.filter(lop=item).count()
+        item.temp = DangKiHocThanhCong.objects.get(lop__id=item.id)
+        time_data = item.temp.time
+        item.s = time_data.strftime('%m/%d/%Y %H:%M:%S')
+        durations = timedelta(days=1)
+        end_time = time_data + durations
+        if now >= end_time:
+            item.disable_button = True
 
-    context = {
-        'sv': sv,
-        'l': l,
-        'ds_lop_hoc_lai': ds_lop_hoc_lai,
-        'ds_moi': ds_moi,
-        'disable_button': item.disable_button
-    }
+    if len(ds_moi) != 0:
+        context = {
+            'sv': sv,
+            'l': l,
+            'ds_lop_hoc_lai': ds_lop_hoc_lai,
+            'ds_moi': ds_moi,
+            'disable_button': item.disable_button
+        }
+    else:
+        context = {
+            'sv': sv,
+            'l': l,
+            'ds_lop_hoc_lai': ds_lop_hoc_lai,
+            'ds_moi': ds_moi,
+        }
     return render(request, 'dang_ki_hoc.html', context)
 
 
@@ -284,7 +277,7 @@ def huy_lop_hoc_lai(request, id):
     w = Diem.objects.filter(mon_hoc=l.mon_hoc, sinh_vien=sv)
     sv.lop.remove(l)
     h = HocPhiConNo.objects.get(user=user, hoc_ki=l.mon_hoc.hocki)
-    h.so_tien_con_no -= l.mon_hoc.tin_chi*300000
+    h.so_tien_con_no -= l.mon_hoc.tin_chi * 300000
     h.save()
     messages.add_message(request, messages.SUCCESS, "Thao tác thành công!")
     return redirect('dang_ki_hoc')
@@ -297,7 +290,7 @@ def huy_lop(request, id):
     w = Diem.objects.filter(mon_hoc=l.mon_hoc, sinh_vien=sv)
     sv.lop.remove(l)
     h = HocPhiConNo.objects.get(user=user, hoc_ki=l.mon_hoc.hocki)
-    h.so_tien_con_no -= l.mon_hoc.tin_chi*300000
+    h.so_tien_con_no -= l.mon_hoc.tin_chi * 300000
     h.save()
     messages.add_message(request, messages.SUCCESS, "Thao tác thành công!")
     return redirect('dang_ki_hoc_chinh')
@@ -327,10 +320,10 @@ def dang_ki_lop(request, id):
             try:
                 k = DangKiHocThanhCong.objects.get(lop__id=a.id)
                 s = HocPhiConNo.objects.get(user=user, hoc_ki=a.mon_hoc.hocki)
-                s.so_tien_con_no += a.mon_hoc.tin_chi * 300000
+                s.so_tien_con_no += a.mon_hoc.tin_chi * t
                 s.save()
             except:
-                z = a.mon_hoc.tin_chi * 300000
+                z = a.mon_hoc.tin_chi * t
                 HocPhiConNo.objects.create(
                     user=user,
                     hoc_ki=a.mon_hoc.hocki,
@@ -415,7 +408,6 @@ def hoc_chinh(request):
     now = datetime.now()
     for i in l:
         i.count = SinhVien.objects.filter(lop=i).count()
-        print("DEADLINE: ", i.deadline)
         if now >= i.deadline:
             i.out_of_date = True
         if i.count >= i.si_so_max:
@@ -464,14 +456,14 @@ def dang_ki_chinh(request, id):
             )
         try:
             a = HocPhiConNo.objects.get(user=user, hoc_ki=l.mon_hoc.hocki)
-            a.so_tien_con_no += l.mon_hoc.tin_chi*300000
+            a.so_tien_con_no += l.mon_hoc.tin_chi * 300000
             a.save()
 
         except:
             HocPhiConNo.objects.create(
                 user=user,
                 hoc_ki=l.mon_hoc.hocki,
-                so_tien_con_no=l.mon_hoc.tin_chi*300000
+                so_tien_con_no=l.mon_hoc.tin_chi * 300000
             )
         messages.add_message(request, messages.SUCCESS, 'Đăng kí thành công!')
     return redirect('dang_ki_hoc_chinh')
@@ -480,16 +472,14 @@ def dang_ki_chinh(request, id):
 def inbox(request):
     u = User.objects.get(username=request.user)
     s = SinhVien.objects.get(user=u)
-    inbox = Messages.objects.filter(receiver=s)
-    print('INNN: ', inbox)
+    inbox_list = Messages.objects.filter(receiver=s)
     return render(request, 'inbox.html', context={
-        'inbox': inbox
+        'inbox': inbox_list
     })
 
 
 def detail_messages(request, id):
     mess_id = Messages.objects.get(pk=id)
-    print(mess_id.seen)
     mess_id.seen = True
     mess_id.save()
     return render(request, 'detail_messages.html', context={

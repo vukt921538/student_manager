@@ -1,14 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login as auth_login
+from django.shortcuts import render, redirect
 from . forms import *
 import random
 import datetime
-from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
-from django.http import HttpResponse
-from openpyxl import Workbook, load_workbook
-from django.core.exceptions import ValidationError
-import numpy as np
+from openpyxl import load_workbook
 from django.core.exceptions import PermissionDenied
 
 
@@ -362,6 +357,8 @@ def hoc_phi(request):
                                  'Không tìm thấy dữ liệu')
 
     data_sv = SinhVien.objects.filter(user__username=msv)
+    co_so_du = False
+    so_du = None
     try:
         data = HocPhiConNo.objects.filter(user__username=msv)
         s = SinhVien.objects.get(user__username=msv)
@@ -385,6 +382,15 @@ def hoc_phi(request):
         sum_da_dong = []
         for i in da_dong:
             sum_da_dong.append(i.so_tien)
+        print(total_du, total_no)
+        if total_du[1] == 0:
+            if total_du[0] > total_no[1]:
+                co_so_du = True
+                so_du = total_du[0] - total_no[1]
+        else:
+            co_so_du = True
+            so_du = total_du[0] + total_du[1]
+
     except:
         data = None,
         s = None
@@ -399,6 +405,8 @@ def hoc_phi(request):
         'form': form,
         'da_dong': da_dong,
         'result': result,
+        'so_du': so_du,
+        'co_so_du': co_so_du
     })
 
 

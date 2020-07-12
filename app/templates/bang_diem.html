@@ -40,7 +40,7 @@
                                 Họ tên: <b class="text-danger">{{sv.hoten}}</b> 
                             </div>
                             <div class="table-responsive" style="padding-top: 10px;">
-                                <h4 class="text-success" style="text-align: center;">BẢNG ĐIỂM TRUNG BÌNH HỌC KÌ, NĂM HỌC, TOÀN KHOÁ</h4>
+                                <h4 class="text-success" style="text-align: center;">BẢNG ĐIỂM TRUNG BÌNH HỆ 4 TOÀN KHOÁ</h4>
                                 <table class="table table-striped table-bordered first">
                                     <thead>
                                         <tr style="text-align: center;">
@@ -50,7 +50,7 @@
                                             <td>Số tín chỉ chưa đạt</td>
                                         </tr>
                                     </thead>
-                                    <tbody style="text-align: center; font-size: 80%;">
+                                    <tbody style="text-align: center">
                                         {% for item in hocki_all %}
                                         <tr>
                                             {% if item.ttc %}
@@ -66,10 +66,9 @@
                                     <tfoot style="text-align: center;">
                                         <tr>
                                             <td><b>Toàn khoá</b></td>
-                                            <td><b>{{total}}</b></td>
-                                            <td> <b>{{tin_chi_all}}</b> </td>
+                                            <td><b>{{diem_he_4}}</b></td>
+                                            <td> <b>{{tong_tin}}</b> </td>
                                             <td><b>{{tong_tc_chua_dat}}</b></td>
-                                            <td></td>
                                         </tr>
                                     </tfoot>
                                 </table>

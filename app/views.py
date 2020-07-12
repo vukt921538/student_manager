@@ -11,7 +11,6 @@ from openpyxl import Workbook
 def index(request):
     if request.user.is_superuser:
         return redirect('home')
-    # sv = SinhVien.objects.get(user=request.user)
     if request.user.is_anonymous:
         return redirect('login')
     get_user = User.objects.get(username=request.user)

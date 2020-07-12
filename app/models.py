@@ -1,9 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_delete
-from django.dispatch import receiver, Signal
-from django.core.validators import MaxValueValidator
-from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Khoa(models.Model):
@@ -11,6 +9,7 @@ class Khoa(models.Model):
 
     def __str__(self):
         return self.tenkhoa
+
 
 class Nganh(models.Model):
     tennganh = models.CharField(max_length=30, unique=True)
@@ -28,6 +27,7 @@ class HeDT(models.Model):
     def __str__(self):
         return f'{self.tenhe} ({self.key})'
 
+
 class NienKhoa(models.Model):
     ten_nienkhoa = models.CharField(max_length=20)
     namhoc = models.CharField(max_length=20)
@@ -35,35 +35,37 @@ class NienKhoa(models.Model):
     def __str__(self):
         return f'{self.ten_nienkhoa} ({self.namhoc})'
 
+
 class HocKi(models.Model):
     ten_hk = models.IntegerField()
 
     def __str__(self):
         return f'{self.ten_hk}'
 
+
 class MonHoc(models.Model):
-    hocki = models.ForeignKey(HocKi,verbose_name='Chọn học kỳ ', on_delete=models.CASCADE)
+    hocki = models.ForeignKey(HocKi, verbose_name='Chọn học kỳ ', on_delete=models.CASCADE)
     nganh = models.ForeignKey(Nganh, on_delete=models.CASCADE)
     ma_mon = models.CharField(max_length=10, unique=True)
     tenmon = models.CharField(max_length=30)
     tin_chi = models.IntegerField(null=True, blank=True)
 
-
     def __str__(self):
         return f'{self.tenmon} ({self.nganh})'
+
 
 class GiaoVien(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     ma_gv = models.CharField(verbose_name="Mã giáo viên", max_length=10, unique=True)
-    ho_ten = models.CharField(verbose_name="Họ tên",max_length=30)
-    ngaysinh = models.CharField(verbose_name="Ngày sinh",max_length=20)
+    ho_ten = models.CharField(verbose_name="Họ tên", max_length=30)
+    ngaysinh = models.CharField(verbose_name="Ngày sinh", max_length=20)
     address = models.CharField(verbose_name="Địa chỉ", max_length=50, null=True, blank=True)
     tot_nghiep_tai = models.CharField(verbose_name="Tốt nghiệp tại", max_length=30, null=True, blank=True)
     email = models.EmailField(verbose_name="Email")
 
-
     def __str__(self):
         return f'{self.ma_gv} ({self.ho_ten})'
+
 
 class ThoiGianHoc(models.Model):
     thu = models.CharField(max_length=10)
@@ -71,8 +73,9 @@ class ThoiGianHoc(models.Model):
 
     def __str__(self):
         return f'{self.thu}-{self.tiet}'
-class Lop(models.Model):
 
+
+class Lop(models.Model):
     GHI_CHU = (
         ('HOCLAI', 'Học lại'),
         ('LOPMOI', 'Lớp mới')
@@ -80,12 +83,13 @@ class Lop(models.Model):
     ma_lop = models.CharField(verbose_name='Mã lớp', max_length=10, unique=True)
     mon_hoc = models.ForeignKey(MonHoc, verbose_name='Môn học', on_delete=models.CASCADE)
     giang_vien = models.ForeignKey(GiaoVien, verbose_name='Giảng viên', on_delete=models.CASCADE)
-    thoi_gian_hoc = models.ForeignKey(ThoiGianHoc, verbose_name='Thời gian học', on_delete=models.CASCADE, null=True, blank=True)
+    thoi_gian_hoc = models.ForeignKey(ThoiGianHoc, verbose_name='Thời gian học', on_delete=models.CASCADE, null=True,
+                                      blank=True)
     si_so_max = models.IntegerField(verbose_name='Sĩ số tối đa')
     created = models.DateTimeField(auto_now=True)
     start_date = models.DateField(verbose_name='Ngày bắt đầu')
     end_date = models.DateField(verbose_name='Ngày kết thúc')
-    he_dt = models.ForeignKey(HeDT, verbose_name='Hệ đào tạo' ,on_delete=models.CASCADE)
+    he_dt = models.ForeignKey(HeDT, verbose_name='Hệ đào tạo', on_delete=models.CASCADE)
     ghi_chu = models.CharField(
         verbose_name='Ghi chú',
         choices=GHI_CHU,
@@ -95,7 +99,6 @@ class Lop(models.Model):
 
     def __str__(self):
         return f'{self.mon_hoc.tenmon} ({self.giang_vien.ho_ten})' if self.mon_hoc else 'UN'
-
 
 
 class SinhVien(models.Model):
@@ -123,7 +126,6 @@ class SinhVien(models.Model):
         return f'{self.hoten} ({self.user.username})' if self.user else 'None'
 
 
-
 class Diem(models.Model):
     sinh_vien = models.ForeignKey(SinhVien, on_delete=models.CASCADE)
     mon_hoc = models.ForeignKey(MonHoc, on_delete=models.CASCADE)
@@ -131,9 +133,9 @@ class Diem(models.Model):
     diem_kiem_tra = models.FloatField(null=True, blank=True)
     diem_cuoi_ki = models.FloatField(null=True, blank=True)
 
-
     def __str__(self):
         return self.mon_hoc.tenmon
+
 
 class DiemHocLai(models.Model):
     sinh_vien = models.ForeignKey(SinhVien, on_delete=models.CASCADE)
@@ -154,6 +156,7 @@ class HocPhiDaDong(models.Model):
     def __str__(self):
         return self.user.username
 
+
 class HocPhiConNo(models.Model):
     user = models.ForeignKey(User, verbose_name='User', on_delete=models.CASCADE)
     hoc_ki = models.ForeignKey(HocKi, verbose_name='Chọn học kì', on_delete=models.CASCADE)
@@ -163,6 +166,7 @@ class HocPhiConNo(models.Model):
 
     def __str__(self):
         return self.user.username
+
 
 class History(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -182,7 +186,7 @@ class Messages(models.Model):
     receiver = models.ForeignKey(SinhVien, related_name='receive', on_delete=models.CASCADE, null=True, blank=True)
     seen = models.BooleanField(default=False)
     date_time = models.DateTimeField(auto_now=True)
-    
+
 
 # Xóa sinh viên sẽ xóa luôn dữ liệu có sẵn của User
 @receiver(post_delete, sender=SinhVien)
@@ -190,9 +194,9 @@ def post_delete_user(sender, instance, *args, **kwargs):
     if instance.user:
         instance.user.delete()
 
+
 # Xóa giảng viên sẽ xóa luôn dữ liệu có sẵn của User
 @receiver(post_delete, sender=GiaoVien)
 def post_delete_user(sender, instance, *args, **kwargs):
     if instance.user:
         instance.user.delete()
-

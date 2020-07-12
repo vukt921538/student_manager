@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="{% static 'student/assets/vendor/fonts/fontawesome/css/fontawesome-all.css' %}">
     <link rel="stylesheet" href="{% static 'student/assets/vendor/charts/chartist-bundle/chartist.css' %}">
     <link rel="stylesheet" href="{% static 'student/assets/vendor/charts/morris-bundle/morris.css' %}">
-    <link rel="stylesheet" href="{% static 'student/assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'student/assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css' %}">
     <link rel="stylesheet" href="{% static 'student/assets/vendor/charts/c3charts/c3.css' %}">
     <link rel="stylesheet" href="{% static 'student/assets/vendor/fonts/flag-icon-css/flag-icon.min.css' %}">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
@@ -23,188 +24,218 @@
 </head>
 
 <body>
-    <!-- ============================================================== -->
-    <!-- main wrapper -->
-    <!-- ============================================================== -->
-    <div class="dashboard-main-wrapper">
+<!-- ============================================================== -->
+<!-- main wrapper -->
+<!-- ============================================================== -->
+<div class="dashboard-main-wrapper">
 
-        <!-- ============================================================== -->
-        <!-- navbar -->
-        <!-- ============================================================== -->
-        <div class="dashboard-header">
-            <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <img src="{% static 'utt.png' %}" class="rounded float-left" alt="logo" style="width: 5%;">
-                <!-- <img src="{% static 'logo_uni.png' %}" alt="..." class="img-responsive" style="max-width: 5%;"> -->
-                <span>
-                    <p>Bộ Giao thông vận tải <br> <span style="font-weight: bold; color: rgb(238, 97, 16); font-size: large;">Đại học Công nghệ giao thông vận tải</span></p>
+    <!-- ============================================================== -->
+    <!-- navbar -->
+    <!-- ============================================================== -->
+    <div class="dashboard-header">
+        <nav class="navbar navbar-expand-lg bg-white fixed-top">
+            <img src="{% static 'utt.png' %}" class="rounded float-left" alt="logo" style="width: 5%;">
+            <!-- <img src="{% static 'logo_uni.png' %}" alt="..." class="img-responsive" style="max-width: 5%;"> -->
+            <span>
+                    <p>Bộ Giao thông vận tải <br> <span
+                            style="font-weight: bold; color: rgb(238, 97, 16); font-size: large;">Đại học Công nghệ giao thông vận tải</span></p>
                 </span>
-                <div class="collapse navbar-collapse " id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto navbar-right-top">
-                        {% if user.is_superuser or user.is_staff %}
+            <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto navbar-right-top">
+                    {% if user.is_superuser or user.is_staff %}
                         <li class="nav-item">
                             <form action="{% url 'search' %}" method="GET">
-                                    <div class="input-group mb-3 top-search-bar" id="custom-search">
-                                            <input type="text" class="form-control" size="50" name="search" placeholder="Mã sinh viên, Họ tên, Lớp, ..." aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                            <div class="input-group-append">
-                                              <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
-                                            </div>
+                                <div class="input-group mb-3 top-search-bar" id="custom-search">
+                                    <input type="text" class="form-control" size="50" name="search"
+                                           placeholder="Mã sinh viên, Họ tên, Lớp, ..."
+                                           aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit"><i
+                                                class="fas fa-search"></i> Tìm kiếm
+                                        </button>
                                     </div>
+                                </div>
                             </form>
                         </li>
-                        {% endif %}
-                        {% if user.is_authenticated %}
+                    {% endif %}
+                    {% if user.is_authenticated %}
                         <li class="nav-item dropdown nav-user">
-                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="/avata/default.svg" alt="" class="user-avatar-md rounded-circle"> <b>{{user_login.user}}</b></a>
-                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
+                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img
+                                    src="/avata/default.svg" alt="" class="user-avatar-md rounded-circle">
+                                <b>{{ user_login.user }}</b></a>
+                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown"
+                                 aria-labelledby="navbarDropdownMenuLink2">
                                 <div class="nav-user-info">
-                                    <h5 class="mb-0 text-white nav-user-name">{{user}} </h5>
+                                    <h5 class="mb-0 text-white nav-user-name">{{ user }} </h5>
                                     {% if user.is_superuser %}
-                                    <span class="status"></span><span class="ml-2"><b>Quản trị viên</b></span>
+                                        <span class="status"></span><span class="ml-2"><b>Quản trị viên</b></span>
                                     {% elif user.is_staff %}
-                                    <span class="status"></span><span class="ml-2"><b>Giáo viên</b></span>
+                                        <span class="status"></span><span class="ml-2"><b>Giáo viên</b></span>
                                     {% else %}
-                                    <span class="status"></span><span class="ml-2"><b>Sinh viên</b></span>
+                                        <span class="status"></span><span class="ml-2"><b>Sinh viên</b></span>
                                     {% endif %}
                                 </div>
                                 <a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i>Đổi mật khẩu</a>
-                                <a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="fas fa-power-off mr-2"></i>Đăng xuất</a>
+                                <a class="dropdown-item text-danger" href="{% url 'logout' %}"><i
+                                        class="fas fa-power-off mr-2"></i>Đăng xuất</a>
                             </div>
                         </li>
-                        {% else %}
+                    {% else %}
                         <button type="submit" class="btn btn-primary"></button>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- end navbar -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- left sidebar -->
+    <!-- ============================================================== -->
+    <div class="nav-left-sidebar sidebar-dark">
+        <div class="menu-list">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav flex-column">
+                        <li class="nav-divider">
+                            Menu
+                            {% if user.is_superuser %}
+                                <span class="badge badge-warning">Admin</span>
+                            {% elif user.is_staff %}
+                                <span class="badge badge-danger">Teachers</span>
+                            {% endif %}
+                        </li>
+                        {% if not user.is_superuser %}
+                            <a class="nav-link" href="{% url 'index' %}"><i class="fa fa-fw fa-user-circle"></i>Thông
+                                tin cá nhân</a>
                         {% endif %}
+                        <li class="nav-item ">
+                            <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-newspaper"></i></i>Bảng tin
+                                <span class="badge badge-success">6</span></a>
+                        </li>
+                        <li class="nav-item">
+                            {% if user.is_superuser %}
+                            {% elif user.is_staff %}
+                                <a class="nav-link" href="{% url 'lop_giang_day' %}"><i
+                                        class="fas fa-angle-double-right"></i>Lớp giảng dạy</a>
+                            {% endif %}
+                        </li>
+                        {% if user.is_staff or user.is_superuser %}
+
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'mon_hoc' %}"><i class="fas fa-align-left"></i>Thời
+                                    khoá biểu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'bang_diem' %}"><i class="fas fa-fw fa-chart-pie"></i>Bảng
+                                    điểm</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'dang_ki_hoc' %}"><i
+                                        class="fas fa-angle-double-right"></i>Đăng kí học cải thiện, học lại</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'dang_ki_hoc_chinh' %}"><i
+                                        class="fas fa-angle-double-right"></i>Đăng kí học chính khoá</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'tra_hoc_phi' %}"><i
+                                        class="fas fa-money-check-alt"></i>Tra cứu học phí</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'inbox' %}"><i class="fas fa-envelope-open-text"></i>Hòm
+                                    thư</a>
+                            </li>
+
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'hoc_phi' %}"><i class="fas fa-fw fa-chart-pie"></i>Quản
+                                    lý học phí</a>
+                            </li>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'add_menu' %}"><i class="fas fa-database"></i></i>Thêm
+                                    mới dữ liệu</a>
+                            </li>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'lop' %}"><i class="far fa-list-alt"></i></i>Danh sách
+                                    lớp</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'list_student' %}"><i class="fas fa-list"></i></i>Danh
+                                    sách sinh viên</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'list_teacher' %}"><i class="fas fa-list"></i></i>Danh
+                                    sách giảng viên</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'send_messages' %}"><i class="fas fa-envelope"></i></i>
+                                    Gửi tin nhắn</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'history' %}"><i class="fas fa-history"></i></i>
+                                    Lịch sử hoạt động</a>
+                            </li>
+                        {% endif %}
+                        <hr>
+
                     </ul>
                 </div>
             </nav>
         </div>
-        
-        <!-- ============================================================== -->
-        <!-- end navbar -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- left sidebar -->
-        <!-- ============================================================== -->
-        <div class="nav-left-sidebar sidebar-dark">
-            <div class="menu-list">
-                <nav class="navbar navbar-expand-lg navbar-light">
-                    <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav flex-column">
-                            <li class="nav-divider">
-                                Menu
-                                {% if user.is_superuser %}
-                                <span class="badge badge-warning">Admin</span>
-                                {% elif user.is_staff %}
-                                <span class="badge badge-danger">Teachers</span>
-                                {% endif %}
-                            </li>
-                            {% if not user.is_superuser %}
-                            <a class="nav-link" href="{% url 'index' %}"><i class="fa fa-fw fa-user-circle"></i>Thông tin cá nhân</a>
-                            {% endif %}
-                            <li class="nav-item ">
-                                <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-newspaper"></i></i>Bảng tin <span class="badge badge-success">6</span></a>
-                            </li>
-                            <li class="nav-item">
-                                {% if user.is_superuser %}
-                                {% elif user.is_staff %}
-                                <a class="nav-link" href="{% url 'lop_giang_day' %}"><i class="fas fa-angle-double-right"></i>Lớp giảng dạy</a>
-                                {% endif %}
-                            </li>
-                            {% if user.is_staff or user.is_superuser %}
-
-                            {% else %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'mon_hoc' %}"><i class="fas fa-align-left"></i>Thời khoá biểu</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'bang_diem' %}"><i class="fas fa-fw fa-chart-pie"></i>Bảng điểm</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'dang_ki_hoc' %}"><i class="fas fa-angle-double-right"></i>Đăng kí học cải thiện, học lại</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'dang_ki_hoc_chinh' %}"><i class="fas fa-angle-double-right"></i>Đăng kí học chính khoá</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'tra_hoc_phi' %}"><i class="fas fa-money-check-alt"></i>Tra cứu học phí</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'inbox' %}"><i class="fas fa-envelope-open-text"></i>Hòm thư</a>
-                            </li>
-                        
-                            {% endif %}
-                            {% if user.is_superuser %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'hoc_phi' %}"><i class="fas fa-fw fa-chart-pie"></i>Quản lý học phí</a>
-                            </li>
-                            {% endif %}
-                            {% if user.is_superuser %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'add_menu' %}"><i class="fas fa-database"></i></i>Thêm mới dữ liệu</a>
-                            </li>
-                            {% endif %}
-                            {% if user.is_superuser %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'lop' %}"><i class="far fa-list-alt"></i></i>Danh sách lớp</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'list_student' %}"><i class="fas fa-list"></i></i>Danh sách sinh viên</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'list_teacher' %}"><i class="fas fa-list"></i></i>Danh sách giảng viên</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'send_messages' %}"><i class="fas fa-envelope"></i></i>Gửi tin nhắn</a>
-                            </li>
-                            {% endif %}
-                            <hr>
-
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <!-- ============================================================== -->
-        <!-- end left sidebar -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- wrapper  -->
-        <!-- ============================================================== -->
-        {% block content %}
-
-        {% endblock %}
-        {% block notifi %}
-
-        {% endblock %}
-    <!-- ============================================================== -->
-    <!-- end main wrapper  -->
     </div>
     <!-- ============================================================== -->
-    <!-- Optional JavaScript -->
-    <!-- jquery 3.3.1 -->
-    <script src="{% static 'student/assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
-    <!-- bootstap bundle js -->
-    <script src="{% static 'student/assets/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
-    <!-- slimscroll js -->
-    <script src="{% static 'student/assets/vendor/slimscroll/jquery.slimscroll.js' %}"></script>
-    <!-- main js -->
-    <script src="{% static 'student/assets/libs/js/main-js.js' %}"></script>
-    <!-- chart chartist js -->
-    <script src="{% static 'student/assets/vendor/charts/chartist-bundle/chartist.min.js' %}"></script>
-    <!-- sparkline js -->
-    <script src="{% static 'student/assets/vendor/charts/sparkline/jquery.sparkline.js' %}"></script>
-    <!-- morris js -->
-    <script src="{% static 'student/assets/vendor/charts/morris-bundle/raphael.min.js' %}"></script>
-    <script src="{% static 'student/assets/vendor/charts/morris-bundle/morris.js' %}"></script>
-    <!-- chart c3 js -->
-    <script src="{% static 'student/assets/vendor/charts/c3charts/c3.min.js' %}"></script>
-    <script src="{% static 'student/assets/vendor/charts/c3charts/d3-5.4.0.min.js' %}"></script>
-    <script src="{% static 'student/assets/vendor/charts/c3charts/C3chartjs.js' %}"></script>
-    <script src="{% static 'student/assets/libs/js/dashboard-ecommerce.js' %}"></script>
+    <!-- end left sidebar -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- wrapper  -->
+    <!-- ============================================================== -->
+    {% block content %}
+
+    {% endblock %}
+    {% block notifi %}
+
+    {% endblock %}
+    <!-- ============================================================== -->
+    <!-- end main wrapper  -->
+</div>
+<!-- ============================================================== -->
+<!-- Optional JavaScript -->
+<!-- jquery 3.3.1 -->
+<script src="{% static 'student/assets/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+<!-- bootstap bundle js -->
+<script src="{% static 'student/assets/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+<!-- slimscroll js -->
+<script src="{% static 'student/assets/vendor/slimscroll/jquery.slimscroll.js' %}"></script>
+<!-- main js -->
+<script src="{% static 'student/assets/libs/js/main-js.js' %}"></script>
+<!-- chart chartist js -->
+<script src="{% static 'student/assets/vendor/charts/chartist-bundle/chartist.min.js' %}"></script>
+<!-- sparkline js -->
+<script src="{% static 'student/assets/vendor/charts/sparkline/jquery.sparkline.js' %}"></script>
+<!-- morris js -->
+<script src="{% static 'student/assets/vendor/charts/morris-bundle/raphael.min.js' %}"></script>
+<script src="{% static 'student/assets/vendor/charts/morris-bundle/morris.js' %}"></script>
+<!-- chart c3 js -->
+<script src="{% static 'student/assets/vendor/charts/c3charts/c3.min.js' %}"></script>
+<script src="{% static 'student/assets/vendor/charts/c3charts/d3-5.4.0.min.js' %}"></script>
+<script src="{% static 'student/assets/vendor/charts/c3charts/C3chartjs.js' %}"></script>
+<script src="{% static 'student/assets/libs/js/dashboard-ecommerce.js' %}"></script>
 </body>
 
 </html>
