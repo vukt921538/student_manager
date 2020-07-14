@@ -64,11 +64,9 @@ def nhap_diem(request, id):
         except:
             sv.diem = ''
     new_session = request.session.get('select', None)
-    print(ds_sv)
     for sv in ds_sv:
         try:
             sv.item = Diem.objects.get(sinh_vien=sv, mon_hoc=lop.mon_hoc)
-            print(sv)
         except:
             pass
     context = {
@@ -148,7 +146,6 @@ def export_csv(request):
     workbook = Workbook()
     worksheet = workbook.active
     worksheet.title = 'Hello'
-
     columns = [
         'STT',
         'Mã SV',
@@ -238,7 +235,6 @@ def nhap_diem_excel(request):
                 break
             for m in sv:
                 if str(m.user) == str(item[fieldIndexes["Mã SV"]]).strip():
-                    print(item[fieldIndexes['Cuối kì']])
                     try:
                         q = Diem.objects.get(sinh_vien=m, mon_hoc=mon_hoc_id)
                         if Diem.objects.filter(sinh_vien=m, mon_hoc=mon_hoc_id).exists():
