@@ -31,7 +31,7 @@ def nhap_diem(request, id):
     if not request.user.is_staff:
         raise PermissionDenied
     lop = Lop.objects.get(pk=id)
-    request.session['id_nhap_diem'] = lop.id
+    request.session['id_nhap_diem'] = lop.id    
     ds_sv = SinhVien.objects.filter(lop=lop)
     for sv in ds_sv:
         try:
