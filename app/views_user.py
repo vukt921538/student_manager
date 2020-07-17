@@ -422,12 +422,20 @@ def hoc_chinh(request):
         end_date = i.new_lop + durations
         if now >= end_date:
             i.disable_button = True
-    context = {
-        'sv': sv,
-        'lop': l,
-        'data': data,
-        'disable_button': i.disable_button
-    }
+
+    if len(data) == 0:
+        context = {
+            'sv': sv,
+            'lop': l,
+            'data': data,
+        }
+    else:
+        context = {
+            'sv': sv,
+            'lop': l,
+            'data': data,
+            'disable_button': i.disable_button
+        }
     return render(request, 'hoc_chinh.html', context)
 
 
